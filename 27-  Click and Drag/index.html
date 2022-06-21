@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Click and Drag</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="items">
+      <div class="item item1">01</div>
+      <div class="item item2">02</div>
+      <div class="item item3">03</div>
+      <div class="item item4">04</div>
+      <div class="item item5">05</div>
+      <div class="item item6">06</div>
+      <div class="item item7">07</div>
+      <div class="item item8">08</div>
+      <div class="item item9">09</div>
+      <div class="item item10">10</div>
+      <div class="item item11">11</div>
+      <div class="item item12">12</div>
+      <div class="item item13">13</div>
+      <div class="item item14">14</div>
+      <div class="item item15">15</div>
+      <div class="item item16">16</div>
+      <div class="item item17">17</div>
+      <div class="item item18">18</div>
+      <div class="item item19">19</div>
+      <div class="item item20">20</div>
+      <div class="item item21">21</div>
+      <div class="item item22">22</div>
+      <div class="item item23">23</div>
+      <div class="item item24">24</div>
+      <div class="item item25">25</div>
+    </div>
+
+    <script>
+      const container = document.querySelector(".items");
+
+      let mousedown = false;
+      let pos = {
+        // The pos of the current scroll and mouse
+        left: 0,
+        x: 0,
+      };
+
+      function triggerActive(e) {
+        if (!mousedown) return;
+        container.classList.add("active");
+        pos = {
+          // Get the current scroll (if the element is not scrolled the scrollLeft = 0)
+          left: this.scrollLeft,
+          // Get the mouse position
+          x: e.clientX,
+        };
+      }
+
+      function handleMove(e) {
+        if (!mousedown) return;
+        // How far the mouse has moved (so if was at 100 and moved to 200 the delta is 100)
+        const dx = e.clientX - pos.x;
+        container.scrollLeft = pos.left - dx; // Current scroll - delta
+        // We subtract the delta because the scroll itself is inverted: when we move the mouse to the right => we scroll to the left
+        // And vice versa
+      }
+
+      function unbindActive() {
+        if (!mousedown) container.classList.remove("active");
+      }
+
+      container.addEventListener("mousemove", (e) => handleMove(e));
+      container.addEventListener("mousedown", () => (mousedown = true));
+      container.addEventListener("mousedown", triggerActive);
+      container.addEventListener("mouseup", () => (mousedown = false));
+      // container.addEventListener("mouseout", () => (mousedown = false)); Makes it remove the class when we hover over different items
+      container.addEventListener("mouseup", unbindActive);
+      // container.addEventListener("mouseout", unbindActive);
+    </script>
+  </body>
+</html>
