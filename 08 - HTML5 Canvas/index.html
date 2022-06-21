@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+  </head>
+
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      const canvas = document.querySelector("canvas");
+      const ctx = canvas.getContext("2d");
+      const width = (canvas.width = innerWidth);
+      const height = (canvas.height = innerHeight);
+
+      ctx.strokeStyle = "#BADA55";
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      let hue = 0;
+      let direction = true;
+
+      function draw(e) {
+        if (!isDrawing) return; // Stops the function from running when it's not moused down
+        console.log(e);
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+        hue++;
+        if (hue >= 360) {
+          hue = 0;
+        }
+
+        if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+          // We start from lineWidth = 0; Increment it all the way up to 100 and change the direction
+          // When we change the direction we start to decrement it, when we get to 1, we change the direction yet again
+          direction = !direction;
+        }
+
+        if (direction) {
+          ctx.lineWidth++;
+        } else {
+          ctx.lineWidth--;
+        }
+      }
+
+      canvas.addEventListener("mousedown", (e) => {
+        // If user is holding down mouse set the variable = true which allows draw() to run
+        // As soon as a user clicks mouse down to start drawing, before we do the mousemove, as mousedown will happen earlier, then we going to update the lastX and lastY;
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY]; // Puts us where we want the line to be not the (0,0);
+      });
+
+      canvas.addEventListener("mousemove", draw); // Function draw() runs on the mouse move and checks whether user is holding down mouse
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseout", () => (isDrawing = false));
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+  </body>
+</html>
